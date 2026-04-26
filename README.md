@@ -1,44 +1,83 @@
 # Roman & Decimal Conversion System Coursework Report
 
-## 
+## Introduction
 
-The goal of this coursework is to design and implement a Python-based program that converts numbers between Roman numerals and decimal (Arabic) numbers while maintaining a history of user conversions. The program demonstrates object-oriented programming principles such as abstraction, inheritance, and the Singleton design pattern.
+The goal of this coursework is to design and implement a Python-based program that converts numbers between Roman numerals and decimal (Arabic) numbers while maintaining a history of user conversions. The program demonstrates object-oriented programming principles, and the Singleton design pattern.
 
-The chosen topic is a **Roman & Decimal Conversion System**, which provides users with two-way conversion functionality:
-- Roman numeral to decimal number
-- Decimal number to Roman numeral
+The chosen topic is Converter for Roman and Decimal numbers, which provides users with two-way conversion functionality:
+
+Roman numeral to decimal number
+Decimal number to Roman numeral
 
 The application is a command-line interface (CLI) tool that also stores previous conversions in a text file for future reference.
 
 ### How to Run the Program
-1. Ensure Python is installed on your computer.
-2. Save the code in a file, for example: `roman_decimal_converter.py`
-3. Open a terminal or command prompt.
-4. Run the program using:
-   ```bash
 
-   How to Use the Program
+Ensure Python is installed on your computer.
+Save the code in a file, for example: roman_decimal_converter.py
+Open a terminal or command prompt.
+Run the program using:
+python roman_decimal_converter.py
+
+### How to Use the Program
 
 After launching, the menu provides five options:
 
-Convert Roman numeral to decimal
-Convert decimal to Roman numeral
-View conversion history
-Clear history
-Exit the application
+1. Roman to Decimal
+2. Decimal to Roman
+3. View History
+4. Clear History
+5. Exit
 
 Users select an option, enter the required value, and the program displays the result while automatically saving it to history.
 
+## Body / Analysis
 
+### 1. Abstraction
 
-Body / Analysis
+Abstraction involves hiding the complex implementation details and showing only the necessary features of an object. It focuses on what an object does rather than how it does it.
 
-The program is structured using multiple classes to ensure modularity, maintainability, and code reusability.
+``` python
+class Converter(ABC):
+    @abstractmethod
+    def convert(self, value):
+        pass
+```
+### 2. Inheritance
 
-1. Singleton Pattern for History Management
+Inheritance allows a class (child) to derive attributes and methods from another class (parent), promoting code reusability.
+
+``` python
+class RomanToDecimal(Converter):
+...
+
+class DecimalToRoman(Converter):
+```
+
+### 3. Polymorphism
+
+Polymorphism (meaning "many forms") allows different classes to be treated as instances of the same general class through the same interface. In Python, this often means calling the same method name on different objects and getting different results.
+
+``` python
+result = converter.convert(process_val)
+```
+
+### 4. Encapsulation
+
+Encapsulation is the bundling of data (attributes) and the methods that operate on that data into a single unit (a class). It also involves restricting direct access to some components (data hiding).
+
+``` python
+class RomanToDecimal(Converter):
+    def __init__(self):
+        self._roman_map = {...} 
+        self._validation_regex = r"..."
+```
+
+### 5. Singleton Pattern
 
 The HistoryManager class ensures only one instance manages the history file throughout the application.
 
+``` python
 class HistoryManager:
     _instance = None
 
@@ -47,72 +86,54 @@ class HistoryManager:
             cls._instance = super(HistoryManager, cls).__new__(cls)
             cls._instance.filename = "conversion_history.txt"
         return cls._instance
-
+```
 This implementation prevents duplicate history managers and centralizes file operations such as saving, viewing, and deleting history.
 
-2. Abstract Base Class for Conversion
+### 6. Composition
+In Composition, the "child" object is owned strictly by the "parent" object. If the parent is destroyed, the child is destroyed too. The child generally cannot exist meaningfully on its own.
 
-The Converter abstract class defines a common structure for all converter types.
+``` python
+class RomanToDecimal(Converter):
+    def __init__(self):
+        self._roman_map = {
+            'I': 1, 'V': 5, 'X': 10, 'L': 50,
+            'C': 100, 'D': 500, 'M': 1000
+        }
+```
 
-class Converter(ABC):
-    @abstractmethod
-    def convert(self, value):
-        pass
+## Results and Summary
 
-This ensures all subclasses implement their own convert() method.
+Application was successfully created using OOP principles in python.
 
-3. Roman to Decimal Conversion
+A Singleton design pattern was utilized through HistoryManager class to
+manage the history file.
 
-The RomanToDecimal class validates Roman numerals using regular expressions before conversion.
-
-if not roman or not re.match(self._validation_regex, roman):
-    raise ValueError(f"'{roman}' is not a valid Roman numeral.")
-
-The algorithm processes numerals from right to left, adding or subtracting values based on Roman numeral rules.
-
-4. Decimal to Roman Conversion
-
-The DecimalToRoman class uses a descending value-symbol mapping.
-
-for val, symbol in self._decimal_map:
-    while number >= val:
-        res.append(symbol)
-        number -= val
-
-This greedy algorithm ensures accurate Roman numeral generation.
-
-5. Functional Requirements Achieved
-
-The program successfully meets the following objectives:
-
-Accurate Roman numeral validation
-Bidirectional conversion
-Exception handling for invalid inputs
-Persistent conversion history
-User-friendly interactive menu
-Results
-The program successfully converts valid Roman numerals (e.g., XIV → 14) and decimal numbers (e.g., 58 → LVIII) with high accuracy.
-Regular expression validation effectively prevents invalid Roman numeral inputs such as IIII or VX.
-The Singleton history manager ensures all conversions are consistently saved in one file without duplication issues.
-One challenge was implementing correct Roman numeral validation rules, as Roman syntax contains strict formatting constraints.
-Another challenge involved balancing modular object-oriented design with simplicity for command-line usability.
-Conclusions
-
-This coursework successfully achieved the development of a fully functional Roman & Decimal Conversion System using Python. The project demonstrates practical implementation of object-oriented concepts including abstraction, inheritance, and design patterns. The final program provides reliable number conversion, robust error handling, and history tracking.
-
-The result of this work is an efficient educational tool for numeral system conversion. Future improvements could include:
-
-A graphical user interface (GUI)
-Support for larger Roman numeral formats
-Exporting history to different file formats
-Additional numeral systems such as binary or hexadecimal
-
-Overall, this project highlights both software design skills and problem-solving in algorithm implementation.
+All four OOP pillars were applied.
 
 
+6 unit test were written and all passed.
 
+### Results
 
+The program accurately converts Roman numerals such as XIV into 14 and decimal numbers such as 58 into LVIII.
+Regular expression validation successfully blocks invalid Roman numeral patterns like IIII or VX.
+The Singleton design pattern ensures that conversion history is managed consistently through a single file.
+One major challenge was implementing strict Roman numeral validation rules due to formatting complexity.
+Another challenge was designing a modular object-oriented structure while keeping the program simple and easy to use.
 
+## Conclusions
 
+This coursework successfully achieved the creation of a functional Roman & Decimal Conversion System using Python. The project demonstrates practical understanding of object-oriented programming through abstraction, inheritance, and design patterns.
 
-   python roman_decimal_converter.py
+The final result is a reliable command-line application capable of converting between numeral systems, validating user input, and storing conversion history. This work provides both educational and practical value.
+
+## Future Prospects
+
+Possible future improvements include:
+
+Developing a graphical user interface (GUI)
+Supporting extended Roman numeral systems beyond 3,999
+Exporting conversion history to CSV or PDF
+Adding support for additional numeral systems such as binary, hexadecimal, or octal
+
+Overall, this coursework demonstrates successful software development, algorithm design, and problem-solving skills.
